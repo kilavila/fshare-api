@@ -2,7 +2,10 @@ import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFile, UseGua
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
 import { ApiKeyGuard } from 'src/guards/api-key.guard';
+import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { File } from 'node:buffer';
 
+@ApiTags('File management')
 @Controller({
   path: 'file',
   version: '1'
@@ -18,6 +21,7 @@ export class FileController {
    *                x-api-key: <api-key>
    */
   @Get()
+  @ApiExcludeEndpoint(true)
   @UseGuards(ApiKeyGuard)
   async getAllFiles() {
     return await this.fileService.getAllFiles();
@@ -30,6 +34,7 @@ export class FileController {
    *                x-api-key: <api-key>
    */
   @Delete()
+  @ApiExcludeEndpoint(true)
   @UseGuards(ApiKeyGuard)
   async deleteAllFiles() {
     return await this.fileService.deleteAllFiles();
@@ -44,6 +49,23 @@ export class FileController {
    *       Example: <url>/v1/file/<id>?pass=<password>
    */
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    example: {
+      "id": "cm80lde0l0000r9umrqfb6zms",
+      "createdAt": "2025-03-08T19:22:45.429Z",
+      "path": "uploads/1741461764354-archive.tar.gz",
+      "message": "message from sender"
+    }
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'pass',
+    required: false,
+  })
   async getFile(
     @Param('id') id: string,
     @Query('pass') password: string,
@@ -60,6 +82,18 @@ export class FileController {
    *       Example: <url>/v1/file/download/<id>?pass=<password>
    */
   @Get('download/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Default response: Streamable file'
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'pass',
+    required: false,
+  })
   async downloadFile(
     @Param('id') id: string,
     @Query('pass') password: string,
@@ -83,6 +117,16 @@ export class FileController {
    *                }
    */
   @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'Default response',
+    example: {
+      "id": "cm80lde0l0000r9umrqfb6zms",
+      "createdAt": "2025-03-08T19:22:45.429Z",
+      "path": "uploads/1741461764354-archive.tar.gz",
+      "message": "message from sender"
+    }
+  })
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @Body() body: any,
@@ -100,6 +144,24 @@ export class FileController {
    *       Example: <url>/v1/file/<id>?pass=<password>
    */
   @Delete(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Default response',
+    example: {
+      "id": "cm80lde0l0000r9umrqfb6zms",
+      "createdAt": "2025-03-08T19:22:45.429Z",
+      "path": "uploads/1741461764354-archive.tar.gz",
+      "message": "message from sender"
+    }
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'pass',
+    required: false,
+  })
   async deleteFile(
     @Param('id') id: string,
     @Query('pass') password: string,

@@ -6,7 +6,9 @@ export class AppService {
   constructor() { }
 
   status() {
-    return 'Server online!';
+    return {
+      status: 'online',
+    };
   }
 
 }

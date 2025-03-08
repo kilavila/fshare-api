@@ -118,7 +118,7 @@ export class FileService {
    *        - availability duration(hours / days)
    */
   async uploadFile(body: any, file: Express.Multer.File) {
-    let hash: string | undefined = undefined;
+    let hash: string | null = null;
     if (body.password) {
       hash = await bcrypt.hash(body.password, 12);
     }
