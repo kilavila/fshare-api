@@ -118,7 +118,10 @@ export class FileService {
    *        - availability duration(hours / days)
    */
   async uploadFile(body: any, file: Express.Multer.File) {
-    const hash = await bcrypt.hash(body.password, 12);
+    let hash: string | undefined = undefined;
+    if (body.password) {
+      hash = await bcrypt.hash(body.password, 12);
+    }
 
     const data = await this.prisma.file.create({
       data: {
@@ -160,6 +163,7 @@ export class FileService {
         message: data.message,
       };
     } else {
+      // TODO: Don't throw exception as data was deleted
       throw new NotFoundException();
     }
   }
