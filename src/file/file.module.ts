@@ -11,7 +11,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ScheduleModule.forRoot(),
     MulterModule.register({
       storage: diskStorage({
-        destination: './images',
+        destination: './uploads',
         filename: (_, file, cb) => {
           const filename = `${Date.now()}-${file.originalname}`;
           cb(null, filename);
