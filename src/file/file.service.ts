@@ -21,8 +21,8 @@ export class FileService {
    *       @Param {string} name
    *       @Param {string} hours
    */
-  addCronJob(id: string, name: string, hours: string) {
-    const job = new CronJob(`* * ${hours} * * *`, async () => {
+  addCronJob(id: string, name: string) {
+    const job = new CronJob(`59 59 23 * * 0`, async () => {
       const data = await this.prisma.file.delete({ where: { id } });
 
       if (existsSync(data.path)) {
@@ -130,7 +130,7 @@ export class FileService {
     });
     if (!data) throw new ServiceUnavailableException();
 
-    this.addCronJob(data.id, data.path.split('/')[1], '72');
+    this.addCronJob(data.id, data.path.split('/')[1]);
     return data;
   }
 
